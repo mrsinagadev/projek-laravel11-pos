@@ -32,6 +32,9 @@ Route::middleware('auth')->group(function () {
         // ubah user yang ada (edit)
         Route::get('/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
 
+        // ubah user yang ada
+        Route::post('/update', [UserController::class, 'update'])->name('users.update');
+
         // hapus user (delete)
         Route::post('/{id}/delete', [UserController::class, 'delete'])->name('users.delete');
     });

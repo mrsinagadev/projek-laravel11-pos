@@ -29,10 +29,11 @@
                     <div class="text-xs">{{ $user->phone }}</div>
                 </td>
                 <td>
-                    <a href="#" class="btn btn-sm btn-warning">Ubah</a>
-                    <button class="btn btn-sm btn-danger">Hapus</button>
+                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-warning">Ubah</a>
+                    <button onclick="document.getElementById('delete-{{ $user->id }}').submit()" class="btn btn-sm btn-danger">Hapus</button>
                 </td>
             </tr>
+            <form action="{{ route('users.delete', $user->id)}}" method="post" id="delete-{{ $user->id }}">@csrf </form>
         @endforeach
     </tbody>
 </table>

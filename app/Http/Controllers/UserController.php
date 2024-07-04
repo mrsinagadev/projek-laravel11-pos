@@ -9,6 +9,31 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public $custom_message =
+    //untuk parameter ke2 validate, kustom tulisan eror
+    [
+        '*.required' => ':Attribute jangan dikosongkan.',
+        'photo_path.max' => ':Attribute maksimal :max kilobyte.',
+        '*.max' => ':Attribute maksimal :max karakter.',
+        '*.email' => ':Attribute harus berupa email yang valid.',
+        '*.unique' => ':Attribute sudah terdaftar!',
+        '*.min' => ':Attribute minimal :min karakter.',
+        '*.alpha_num' => ':Attribute hanya terdiri dari huruf dan angka.',
+        '*.image' => ':Attribute harus berupa gambar.',
+        '*.mimes' => 'Format :attribute hanya berupa :mimes.'
+
+    ];
+    public $custom_attribute =
+    //untuk parameter ke3 validate, kustom attribute
+    [
+        'name' => 'Nama Lengkap',
+        'email' => 'Alamat Email',
+        'username' => 'Nama Pengguna',
+        'password' => 'Kata Sandi',
+        'phone' => 'Nomor Telepon',
+        'role' => 'Jabatan',
+        'photo_path' => 'Foto Profil'
+    ];
     public function index()
     {
         //panggil semua data user dari tabel
@@ -34,29 +59,9 @@ class UserController extends Controller
             'role' => 'required',
             'photo_path' => 'nullable|image|max:1024|mimes:jpg,jpeg,png'
         ],
-        //untuk parameter ke2 validate, kustom tulisan eror
-        [
-            '*.required' => ':Attribute jangan dikosongkan.',
-            'photo_path.max' => ':Attribute maksimal :max kilobyte.',
-            '*.max' => ':Attribute maksimal :max karakter.',
-            '*.email' => ':Attribute harus berupa email yang valid.',
-            '*.unique' => ':Attribute sudah terdaftar!',
-            '*.min' => ':Attribute minimal :min karakter.',
-            '*.alpha_num' => ':Attribute hanya terdiri dari huruf dan angka.',
-            '*.image' => ':Attribute harus berupa gambar.',
-            '*.mimes' => 'Format :attribute hanya berupa :mimes.'
-
-        ],
-        //untuk parameter ke3 validate, kustom attribute
-        [
-            'name' => 'Nama Lengkap',
-            'email' => 'Alamat Email',
-            'username' => 'Nama Pengguna',
-            'password' => 'Kata Sandi',
-            'phone' => 'Nomor Telepon',
-            'role' => 'Jabatan',
-            'photo_path' => 'Foto Profil'
-        ]);
+            $this->custom_message,
+            $this->custom_attribute
+    );
         // periksa apakah ada file foto yang diunggah
         $alamat = null;
         if($request->hasFile('photo_path')) {
@@ -81,13 +86,47 @@ class UserController extends Controller
         return redirect()->back()->with('error', 'Data user gagal disimpan, Terjadi kesalahan saat menyimpan data!');
     }
 
-    public function edit()
+    public function edit($id)
     {
-
+        //temukan user
+        $user = User::find($id);
+        if(!$user){
+            return to_route('users.index');
+        }
+        return view('users.edit', ['user' => $user]);
+    }
+    public function update(Request $request)
+    {
+        $validasi = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users,email,' . $request->id,
+            'username' => 'required|min:6|unique:users,username',
+            'phone' => 'required|min:9',
+            'role' => 'required',
+            'photo_path' => 'nullable|image|max:1024|mimes:jpg,jpeg,png'
+        ],
+            $this->custom_message,
+            $this->custom_attribute
+        );
+        $alamat = null;
+        if($request->hasFile('photo_path')) {
+            $alamat = Storage::disk('public')
+            ->putFile('foto-profil', $request->file('photo_path'));
+        }
+        User::find($request->id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'username' => $request->username,
+            'phone' => $request->phone,
+            'role' => $request->role,
+            'photo_path' => $alamat
+        ]);
+        return to_route('users.index')->with('success', 'Data user berhasil diubah.');
     }
 
-    public function delete()
+    public function delete($id)
     {
-
+        User::find($id)->delete();
+        return to_route('users.index')->with('success', 'Data user berhasil dihapus.');
     }
 }
