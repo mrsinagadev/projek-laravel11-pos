@@ -12,10 +12,10 @@
     <thead>
         <tr>
             <th>No</th>
-            <th>Role</th>
+            <th>Jabatan</th>
             <th>Nama</th>
             <th>Kontak</th>
-            <th>Opsi</th>
+            <th>Aksi</th>
         </tr>
     </thead>
     <tbody>
@@ -29,7 +29,7 @@
                     <div class="text-xs">{{ $user->phone }}</div>
                 </td>
                 <td>
-                    <a href="#" class="btn btn-sm">Ubah</a>
+                    <a href="#" class="btn btn-sm btn-warning">Ubah</a>
                     <button class="btn btn-sm btn-danger">Hapus</button>
                 </td>
             </tr>
