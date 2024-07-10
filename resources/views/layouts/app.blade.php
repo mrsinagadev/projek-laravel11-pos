@@ -15,6 +15,7 @@
     <!-- Css -->
     <link rel="stylesheet" href="{{ url('css/bootstrap.css') }}">
     <!-- Scripts -->
+    <script src="{{ url('js/popper.min.js') }}" defer></script>
     <script src="{{ url('js/bootstrap.js') }}" defer></script>
 </head>
 <body>
@@ -34,6 +35,9 @@
                         @auth
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs ('home') ? 'active' : '' }}" aria-current="page" href="{{ route('home') }}">Home</a>
+                          </li>
+                        <li class="nav-item">
+                            <a href="{{ route('categories.index') }}" class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}">Kategori</a>
                           </li>
                           <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs ('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">User</a>

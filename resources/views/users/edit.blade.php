@@ -20,7 +20,7 @@
         </div>
         <div class="mb-3">
             <label for="email">Alamat Email</label>
-            <input value="{{ old('email', $user->email) }}" type="email" class="form-control @error('email') is-invalid @enderror " id="email" name="email">
+            <input value="{{ old('email', $user->email) }}" type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email">
             @error('email')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror

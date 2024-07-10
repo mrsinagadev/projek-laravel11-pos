@@ -51,4 +51,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // relasi user dengan kategori
+    // 1 to many ( satu user bisa bikin banyak kategori )
+    public function categories(){
+        return $this->hasMany(Category::class);
+    }
+
 }
