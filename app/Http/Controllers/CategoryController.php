@@ -35,10 +35,11 @@ class CategoryController extends Controller
     {
         // terima data dari form modal
         $validated = Validator::validate($request->all(), [
-            'name' => 'required|string',
+            'name' => 'required|string|unique:categories,name',
         ], [
             'name.required' => 'Nama kategori harus diisi',
             'nama.string' => 'Penulisan Nama kategori tidak valid!',
+            'nama.unique' => 'Nama kategori sudah terdaftar!',
         ]);
 
         Category::create([
@@ -70,7 +71,17 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $request->validate([
+            'name' => 'required|unique:categories,name,' . $category->id,
+        ], [
+            'name.required' => 'Nama kategori harus diisi',
+            'nama.unique' => 'Nama Kategori sudah terdaftar!',
+        ]);
+        $category->update([
+            'name' => $request->name,
+        ]);
+        
+        return back()->with('success', 'Data Kategory berhasil diubah!');
     }
 
     /**
@@ -78,6 +89,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return back()->with('success', 'Data Kategori berhasil dihapus!');
     }
 }
