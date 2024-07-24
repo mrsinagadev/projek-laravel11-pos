@@ -39,6 +39,9 @@
                         <li class="nav-item">
                             <a href="{{ route('categories.index') }}" class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}">Kategori</a>
                           </li>
+                        <li class="nav-item">
+                            <a href="{{ route('products.index') }}" class="nav-link {{ request()->routeIs('products.*') ? 'active' : '' }}">Produk</a>
+                          </li>
                           <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs ('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">User</a>
                           </li>

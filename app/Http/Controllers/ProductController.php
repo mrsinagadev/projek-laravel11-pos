@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        //panggil semua data produk
+        //paginate berfungsi untuk membatas data maksimal 10 data
+        $products = Product::latest()->with(['user', 'category'])->paginate(10);
+        return view('products.index', compact('products'));
     }
 
     /**
@@ -20,7 +24,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        //panggil semua data kategori dan urutkan berdasarkan nama
+        $categories = Category::orderBy('name')->get();
+        return view('products.create', compact('categories'));
     }
 
     /**
@@ -28,7 +34,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     /**
@@ -36,7 +42,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return view('products.show', compact('product'));
     }
 
     /**
@@ -44,7 +50,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return view('products.edit', compact('product'));
     }
 
     /**

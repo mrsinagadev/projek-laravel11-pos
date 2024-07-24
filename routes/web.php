@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -19,8 +20,10 @@ Auth::routes(['register' => false]);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware('auth')->group(function () {
-    // Route menu kategori
     Route::resource('categories', CategoryController::class);
+    Route::resource('products', ProductController::class);
+    // Route menu kategori
+    // Route::resource('categories', CategoryController::class);
     // Route untuk menu user
     Route::prefix('users')->group(function () {
             // tampilan semua user (index)

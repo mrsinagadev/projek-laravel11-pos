@@ -57,5 +57,9 @@ class User extends Authenticatable
     public function categories(){
         return $this->hasMany(Category::class);
     }
+    // relasi user dengan produk
+    public function products(){
+        return $this->hasMany(Product::class);
+    }
 
 }
