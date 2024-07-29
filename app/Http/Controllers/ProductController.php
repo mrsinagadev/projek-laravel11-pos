@@ -5,17 +5,40 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    // rules validasi
+    protected $rules =  [
+            // 'name' => 'required|unique:products,name' . $id ? (',' . $id) : '',
+            'stock' => 'nullable',
+            'price' => 'required|min:0',
+            'selling_price' => 'required|min:0',
+            'description' => 'nullable',
+        ];
+    // custom attribute
+    protected $attributes = [
+        'name' => 'nama produk',
+        'price' => 'harga modal',
+        'selling_price' => 'harga jual',
+        'description' => 'deskripsi produk',
+    ];
+    // custom message
+    protected $messages = [
+        '*.required' => ':Attribute harus diisi.',
+        '*.min' => ':Attribute minimal bernilai :value.',
+        '*.unique' => ':Attribute sudah terdaftar.',
+    ];
+
     public function index()
     {
         //panggil semua data produk
         //paginate berfungsi untuk membatas data maksimal 10 data
-        $products = Product::latest()->with(['user', 'category'])->paginate(10);
+        $products = Product::latest()->with(['user', 'category'])->paginate(1);
         return view('products.index', compact('products'));
     }
 
@@ -34,7 +57,27 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        // untuk mengecek inputan
+        // dd($request->all());
+        $rules = $this->rules;
+        $rules['name'] = 'required|unique:products,name';
+        $validated = $request->validate(
+            $rules,
+            $this->messages,
+            $this->attributes
+        );
+
+        // simpan data
+        $simpan = Product::create ([
+            'category_id' => $request->category,
+            'user_id' => Auth::id(),
+            'name' => $request->name,
+            'stock' => $request->stock,
+            'price' => $request->price,
+            'selling_price' => $request->selling_price,
+            'description' => $request->description,
+        ]);
+        return to_route('products.index')->with('success', 'Data Produk berhasil disimpan.');
     }
 
     /**
