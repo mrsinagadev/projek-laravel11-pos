@@ -28,11 +28,11 @@
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->stock }}</td>
                     <td>Rp. {{ number_format($product->price, 0, ',', '.') }}</td>
-                    <td>{{ $product->price }}</td>
                     <td>{{ $product->selling_price }}</td>
                     <td>
                         <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-xs">Ubah</a>
-                        <button class="btn btn-danger btn-xs" onclick="confirm(Yakin ingin menghapus {{ $product->name }} ? document.getElementById('delete-{{ $product->id }}').submit() : null">Hapus</button>
+                        {{-- <button class="btn btn-danger btn-xs" onclick="confirm('Yakin ingin menghapus ?' document.getElementById('delete-{{ $product->id }}').submit() : null">Hapus</button> --}}
+                        <button onclick="document.getElementById('delete-{{ $product->id }}').submit()" class="btn btn-danger btn-xs">Hapus</button>
                     </td>
                 </tr>
                 <form style="display: none" action="{{ route('products.destroy', $product->id) }}" method="POST" id="delete-{{ $product->id }}">

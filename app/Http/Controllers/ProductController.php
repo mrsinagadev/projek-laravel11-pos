@@ -38,7 +38,7 @@ class ProductController extends Controller
     {
         //panggil semua data produk
         //paginate berfungsi untuk membatas data maksimal 10 data
-        $products = Product::latest()->with(['user', 'category'])->paginate(1);
+        $products = Product::latest()->with(['user', 'category'])->paginate(5);
         return view('products.index', compact('products'));
     }
 
@@ -93,7 +93,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.edit', compact('product'));
+        $categories = Category::orderBy('name')->get();
+        return view('products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -101,14 +102,39 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $rules = $this->rules;
+        $rules['name'] = 'required|unique:products,name,' . $product->id;
+        $validated = $request->validate(
+            $rules,
+            $this->messages,
+            $this->attributes
+        );
+        // update data product
+        $product->update([
+            'category_id' => $request->category,
+            // 'user_id' => Auth::id(),
+            'name' => $request->name,
+            'stock' => $request->stock,
+            'price' => $request->price,
+            'selling_price' => $request->selling_price,
+            'description' => $request->description,
+        ]);
+        return to_route('products.index')->with('success', 'Data Produk berhasil diubah.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    // public function destroy(Product $product)
+    // {
+    //     $product->delete();
+    //     // return back()->with('success', 'Data Produk berhasil dihapus!');
+    //     return to_route('products.index')->with('success', 'Data Produk berhasil dihapus.');
+    // }
+
+    public function destroy($id)
     {
-        //
+        Product::find($id)->delete();
+        return to_route('products.index')->with('success', 'Data Produk berhasil dihapus.');
     }
 }

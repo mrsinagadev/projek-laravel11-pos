@@ -16,7 +16,7 @@ class CategoryController extends Controller
     public function index()
     {
         //
-        $categories = Category::latest()->with('user')->get();
+        $categories = Category::latest()->with('user', 'products')->get();
         return view('categories.index', ['categories' => $categories]);
     }
 
@@ -80,7 +80,7 @@ class CategoryController extends Controller
         $category->update([
             'name' => $request->name,
         ]);
-        
+
         return back()->with('success', 'Data Kategory berhasil diubah!');
     }
 

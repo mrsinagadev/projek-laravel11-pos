@@ -100,7 +100,7 @@ class UserController extends Controller
         $validasi = $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users,email,' . $request->id,
-            'username' => 'required|min:6|unique:users,username',
+            'username' => 'required|min:6|unique:users,username,' . $request->id,
             'phone' => 'required|min:9',
             'role' => 'required',
             'photo_path' => 'nullable|image|max:1024|mimes:jpg,jpeg,png'

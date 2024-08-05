@@ -33,6 +33,7 @@
             <th>Nama Kategori</th>
             <th>Jumlah Produk</th>
             <th>Foto</th>
+            <th>Dibuat Oleh</th>
             <th>Aksi</th>
         </tr>
     </thead>
@@ -41,12 +42,13 @@
             <tr>
                 <td>{{ $i + 1 }}</td>
                 <td>{{ $category->name }}</td>
-                <td>{{ '0' }}</td>
+                <td>{{ $category->products->count() }}</td>
                 <td>
                     @if ($category->photo_path)
                         <img src="{{ url('storage/' . $category->photo_path) }}" alt="" style="width: 200px; height: auto;">
                     @endif
                 </td>
+                <td>{{ $category->user->name ?? '-' }}</td>
                 <td>
                     <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal{{ $category->id }}">Ubah</button>
                     <x-modal id="editModal{{ $category->id }}">
