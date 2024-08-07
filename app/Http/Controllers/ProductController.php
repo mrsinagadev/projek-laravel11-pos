@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
@@ -47,6 +48,7 @@ class ProductController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create', Product::class);
         //panggil semua data kategori dan urutkan berdasarkan nama
         $categories = Category::orderBy('name')->get();
         return view('products.create', compact('categories'));
@@ -57,6 +59,9 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        //Hanya admin yang boleh simpan data
+        //Berdasarkan policy yang ada di ProductPolicy
+        Gate::authorize('create', Product::class);
         // untuk mengecek inputan
         // dd($request->all());
         $rules = $this->rules;
@@ -93,6 +98,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        Gate::authorize('update', $product);
+
         $categories = Category::orderBy('name')->get();
         return view('products.edit', compact('product', 'categories'));
     }
@@ -102,6 +109,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        Gate::authorize('update', $product);
+
         $rules = $this->rules;
         $rules['name'] = 'required|unique:products,name,' . $product->id;
         $validated = $request->validate(
@@ -134,6 +143,8 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
+        Gate::authorize('delete', Product::class);
+
         Product::find($id)->delete();
         return to_route('products.index')->with('success', 'Data Produk berhasil dihapus.');
     }

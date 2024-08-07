@@ -20,7 +20,11 @@ Auth::routes(['register' => false]);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware('auth')->group(function () {
-    Route::resource('categories', CategoryController::class);
+    // Route menu kategori
+    Route::resource('categories', CategoryController::class)
+    ->middleware('apakah_admin');
+
+    //Route menu product
     Route::resource('products', ProductController::class);
     // Route menu kategori
     // Route::resource('categories', CategoryController::class);
