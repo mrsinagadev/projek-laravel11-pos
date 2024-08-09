@@ -141,11 +141,18 @@ class ProductController extends Controller
     //     return to_route('products.index')->with('success', 'Data Produk berhasil dihapus.');
     // }
 
-    public function destroy($id)
-    {
-        Gate::authorize('delete', Product::class);
+    // public function destroy($id)
+    // {
+    //     Gate::authorize('delete', Product::class);
 
-        Product::find($id)->delete();
-        return to_route('products.index')->with('success', 'Data Produk berhasil dihapus.');
-    }
+    //     Product::find($id)->delete();
+    //     return to_route('products.index')->with('success', 'Data Produk berhasil dihapus.');
+    // }
+    public function destroy(Product $product)
+	{
+		Gate::authorize('delete', $product);
+
+		$product->delete();
+		return back()->with('success', 'Data produk berhasil dihapus.');
+	}
 }
